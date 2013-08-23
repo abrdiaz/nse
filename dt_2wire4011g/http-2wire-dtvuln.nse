@@ -161,7 +161,7 @@ local function inicia_tabla (pagina,tabla)
 		end
 	end
 	tabla.usuarios = {}
-	if geoapikey then tabla.coords = "" end
+	--if geoapikey then tabla.coords = "" end
 	tabla.archivos = {}
 end
 
