@@ -161,7 +161,7 @@ local function inicia_tabla (pagina,tabla)
 		end
 	end
 	tabla.usuarios = {}
-	--if geoapikey then tabla.coords = "" end
+	if geoapikey then tabla.coords = "" end
 	tabla.archivos = {}
 end
 
@@ -276,8 +276,12 @@ local function sacar_info (tabla)
 		tabla.usuarios.rma = algoritmo_rma(tabla.serie.."2Wire-000D72")
 	end
 	
-	if geoapikey and tabla.bssid ~= "" and tabla.dispositivos then
-		tabla.coords = geoloc(tabla.bssid,tabla.dispositivos)
+	if geoapikey then
+		if tabla.bssid ~= "" and tabla.dispositivos then
+			tabla.coords = geoloc(tabla.bssid,tabla.dispositivos)
+		else
+			tabla.coords = nil
+		end
 	end
 end
 
@@ -344,6 +348,7 @@ action = function(host,port)
 			if respuesta.body and respuesta.status == 200 and not string.find(respuesta.body,"Error") and not string.find(respuesta.body,"html") then
 				tabladatos.archivos[archivo] = string.sub(respuesta.body,3) --por el CRLF extra en el cuerpo
 				exito = exito + 1
+				stdnse.print_debug(1,"%s C - %s Se obtuvo %s, exito = %d",SCRIPT_NAME,host.ip,archivo,exito)
 			end
 		end
 		
