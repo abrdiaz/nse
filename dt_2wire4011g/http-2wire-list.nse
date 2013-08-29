@@ -2,10 +2,6 @@ description = [[
 2wire 4011G and 5012NV Directory Traversal Vulnerability List Only.
 
 Solo hace una lista de posibles modems vulnerables en el archivo ./http-2wire-temp.txt
-
-Se puede usar el archivo como entrada para el script http-2wire-dtvuln.nse
-
-Mejor opcion que solo nmap -n -sL -T4 -PS8080 <target> para listar posibles victimas
 ]]
 
 ---
